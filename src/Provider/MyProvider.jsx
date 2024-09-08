@@ -1,6 +1,6 @@
 // MyContext.js
 import React, { createContext, useEffect, useState } from 'react';
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from '../Firebase/Firebase.config';
 import axios from 'axios';
 
@@ -11,6 +11,7 @@ const auth = getAuth(app);
 
 export const MyProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Initialize as null
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
 
   useEffect(() => {
@@ -25,13 +26,27 @@ export const MyProvider = ({ children }) => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (loggedUser) => {
+      console.log("logged in user inside auth state observer", loggedUser);
+      setUser(loggedUser);
+      setLoading(false);
+   
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const name = "sijab"; // Example static value, replace as needed
   const values = {
     auth,
     name,
     user,
-    setUser,
-    userData
+    userData,
+    loading,
+ 
   };
 
   return (

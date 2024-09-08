@@ -4,8 +4,9 @@ import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutl
 import About from './About';
 import Router from './Router/Router';
 import Donate from './Pages/Donete/Donate';
-import Req from './Pages/Client/Req/Req';
+import Req from './Pages/Client/Req/BloodDonnars';
 import Message from './Pages/Client/Message/Message';
+import BloodDonners from './Pages/Client/Req/BloodDonnars';
 
 
 
@@ -26,7 +27,7 @@ let items;
 if(client){
    items = [
     getItem('Tset', '/', <PieChartOutlined />),
-    getItem('Option 2', '/option2', <DesktopOutlined />),
+    getItem('Login', '/about', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
       getItem('Donar Request', '/req'),
       getItem('Bill', '/user/bill'),
@@ -60,8 +61,8 @@ if(client){
 
 const routes = {
   '/': () => <div>This is Home</div>,
-  '/donate': Donate ,
-  '/req': Req,
+  '/about': About ,
+  '/req': BloodDonners,
   '/req/message': Message,
   '/user/tom': () => <div>Tom's Content</div>,
   '/user/bill': () => <div>Bill's Content</div>,

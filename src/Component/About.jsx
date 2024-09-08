@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { MyContext } from '../Provider/Myprovider';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider,signOut } from "firebase/auth";
 import axios from 'axios';
 
 const About = () => {
-    const { auth, setUser } = useContext(MyContext);
+    const { auth } = useContext(MyContext);
     const provider = new GoogleAuthProvider();
 
     const handleLogin = async () => {
@@ -12,8 +12,7 @@ const About = () => {
             // Sign in with Google
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
-            setUser(user);
-            console.log(user);
+          
 
             // Post user data to the backend
             const userData = {
@@ -36,9 +35,20 @@ const About = () => {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            setUser(null);
+            console.log('User logged out successfully');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
+
     return (
         <div>
             <button onClick={handleLogin}>Login</button>
+            <button onClick={handleLogout} >Logout</button>
         </div>
     );
 };
