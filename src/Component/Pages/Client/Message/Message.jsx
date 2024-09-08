@@ -1,18 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
 import { FiSend } from 'react-icons/fi';
+import { MyContext } from '../../../../Provider/MyProvider';
+
+const SOCKET_SERVER_URL = 'http://localhost:5000';
 
 const Message = ({ queryParams }) => {
+  const {socket} = useContext(MyContext)
   const userId = queryParams.userId;
   const donorId = queryParams.donorId;
+  const [incomingMessage, setIncomingMessage] = useState(null);
+ // Store the socket connection
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [conversationId, setConversationId] = useState(null);
 
   useEffect(() => {
+    if (socket.current) {
+      socket.current.on('getMessage', data => {
+        setIncomingMessage({
+          ...data,
+          createdAt: Date.now()
+        });
+      });
+  
+    }
+  }, [socket]);
+  
+console.log(incomingMessage)
+
+  // Fetch or create conversation
+  useEffect(() => {
     const getOrCreateConversation = async () => {
       try {
-        // Fetch conversation
         const res = await axios.get('http://localhost:5000/conversations', {
           params: { userId, donorId },
         });
@@ -46,12 +67,13 @@ const Message = ({ queryParams }) => {
     setInput(e.target.value);
   };
 
+  // Fetch messages after conversationId is set
   useEffect(() => {
     const fetchMessages = async () => {
       if (conversationId) {
         try {
           const response = await axios.get(`http://localhost:5000/messages/${conversationId}`);
-          setMessages(response.data); // Set the messages after fetching them
+          setMessages(response.data);
           console.log('Fetched messages:', response.data);
         } catch (err) {
           console.error('Error fetching messages:', err);
@@ -65,20 +87,31 @@ const Message = ({ queryParams }) => {
   const handleSendMessage = async () => {
     if (input.trim() && conversationId) {
       try {
-        const response = await axios.post('http://localhost:5000/messages', {
+        const message = {
           conversationId,
           senderId: userId,
           content: input,
-        });
-
+          receiverId: donorId
+        };
+  
+        socket.current.emit('sendMessage', message);
+  
+        const response = await axios.post('http://localhost:5000/messages', message);
         const newMessage = response.data;
-        setMessages([...messages, newMessage]); // Append new message to the state
+  
+        setMessages(prevMessages => [...prevMessages, newMessage]);
         setInput('');
       } catch (err) {
         console.error('Error sending message:', err);
       }
     }
   };
+  
+  useEffect(() => {
+    incomingMessage && 
+        setMessages((prev) => [...prev, incomingMessage]);
+    
+}, [incomingMessage]);
 
   return (
     <div className="flex flex-col h-screen">

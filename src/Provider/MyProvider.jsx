@@ -1,8 +1,9 @@
 // MyContext.js
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from '../Firebase/Firebase.config';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 // Create the context
 export const MyContext = createContext();
@@ -10,9 +11,34 @@ export const MyContext = createContext();
 const auth = getAuth(app); 
 
 export const MyProvider = ({ children }) => {
+  const socket = useRef()
   const [user, setUser] = useState(null); // Initialize as null
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
+
+  useEffect(() => {
+    socket.current = io('http://localhost:5000'); // Use http:// instead of ws://
+}, []);
+
+useEffect(() => {
+  console.log('Socket Initialized:', socket.current); // Log to ensure socket is initialized
+
+  if (socket.current) {
+    socket.current.on('connect', () => {
+      console.log('Socket connected');
+    });
+
+    socket.current.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+
+    return () => {
+      socket.current.off('connect');
+      socket.current.off('disconnect');
+    };
+  }
+}, [socket]);
+
 
   useEffect(() => {
     const getData = async () => {
@@ -46,6 +72,7 @@ export const MyProvider = ({ children }) => {
     user,
     userData,
     loading,
+    socket
  
   };
 

@@ -1,8 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MyContext } from '../../../../Provider/Myprovider';
 
 const BloodDonors = ({ navigate }) => {
-  const { userData,user } = useContext(MyContext);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const { userData,user,socket } = useContext(MyContext);
+
+  useEffect(() => {
+    socket.current.emit('addUser', user);
+    socket.current.on("getUsers", users => {
+        setActiveUsers(users)
+    })
+}, [user,socket])
+
+console.log(activeUsers)
+
 
 const userId = user?.uid
   const handleMessageClick = ( donorId) => {
