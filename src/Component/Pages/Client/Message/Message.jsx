@@ -5,8 +5,8 @@ import { MyContext } from '../../../../Provider/MyProvider';
 
 const Message = ({ queryParams }) => {
   const { socket } = useContext(MyContext);
-  const userId = queryParams.userId;
-  const donorId = queryParams.donorId;
+  const userId = queryParams?.userId;
+  const donorId = queryParams?.donorId;
   const [incomingMessage, setIncomingMessage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');

@@ -21,7 +21,7 @@
     z-index: 1; /* Place the overlay above the background but below the content */
 }
 
-.flex {
+.fleo {
     position: relative; /* Ensure the flex container is positioned relative to accommodate overlay */
     z-index: 2; /* Ensure the flex content is above the overlay */
     display: flex;

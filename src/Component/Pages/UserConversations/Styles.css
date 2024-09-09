@@ -1,0 +1,21 @@
+/* Add this to your global CSS file or tailwind.config.js */
+.pagination {
+    @apply flex items-center justify-center space-x-1;
+  }
+  
+  .page-item {
+    @apply bg-white border border-gray-300 rounded-md;
+  }
+  
+  .page-link {
+    @apply px-4 py-2 text-gray-600;
+  }
+  
+  .page-link:hover {
+    @apply bg-gray-200;
+  }
+  
+  .active {
+    @apply bg-blue-500 text-white;
+  }
+  

@@ -9,6 +9,7 @@ import Message from './Pages/Client/Message/Message';
 import BloodDonners from './Pages/Client/Req/BloodDonnars';
 import UserLogin from './Pages/Authentication/UserLogin';
 import Home from './Pages/Home/Home';
+import UserConversations from './Pages/UserConversations/UserConversations';
 
 
 
@@ -32,14 +33,14 @@ if(client){
     getItem('Login', '/reg', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
       getItem('Donar Request', '/req'),
-      getItem('Bill', '/user/bill'),
+      getItem('Conversations', '/req/conversations'),
       getItem('Alex', '/user/alex'),
     ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [
-      getItem('Team 1', '/team1'),
-      getItem('Team 2', '/team2'),
+    getItem('Profile', 'sub2', <TeamOutlined />, [
+      getItem('Edit Profile', '/team1'),
+    
     ]),
-    getItem('Files', '/files', <FileOutlined />),
+
   ];
 } else {
    items = [
@@ -50,7 +51,7 @@ if(client){
       getItem('Bill', '/user/bill'),
       getItem('Alex', '/user/alex'),
     ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [
+    getItem('Profile', 'sub2', <TeamOutlined />, [
       getItem('Team 1', '/team1'),
       getItem('Team 2', '/team2'),
     ]),
@@ -66,8 +67,9 @@ const routes = {
   '/reg': UserLogin ,
   '/req': BloodDonners,
   '/req/message': Message,
+  '/req/conversations': UserConversations,
+  '/req/conversations/message':Message ,
   '/user/tom': () => <div>Tom's Content</div>,
-  '/user/bill': () => <div>Bill's Content</div>,
   '/user/alex': () => <div>Alex's Content</div>,
   '/team1': () => <div>Team 1's Content</div>,
   '/team2': () => <div>Team 2's Content</div>,

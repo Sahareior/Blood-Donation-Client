@@ -5,7 +5,7 @@ import './Counter.css'; // Ensure this file contains necessary styling
 const Counter = () => {
   return (
     <div className="container flex  justify-center h-screen">
-      <div className="flex justify-center space-x-4">
+      <div className="fleo justify-center space-x-4">
         <div className="counter-item p-5 rounded-lg shadow-lg text-center text-red-500">
           <h3 className="text-2xl font-bold mb-2">Experience</h3>
           <CountUp end={10} duration={8} className="text-3xl font-semibold" />

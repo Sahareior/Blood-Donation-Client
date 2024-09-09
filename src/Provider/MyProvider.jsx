@@ -16,6 +16,7 @@ export const MyProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
   const [activeUsers, setActiveUsers] = useState([]);
+  const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
     socket.current = io('http://localhost:5000'); // Use http:// instead of ws://
@@ -41,6 +42,32 @@ useEffect(() => {
 }, [socket]);
 
 
+
+
+useEffect(() => {
+  const fetchUserConversations = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/user-conversations/${user?.uid}`);
+      // Get the data from the response
+      const conversationsData = response.data;
+
+      // Filter out duplicate conversations based on the uid
+      const uniqueConversations = Array.from(
+        new Map(
+          conversationsData.map((item) => [item.participants[0].uid, item])
+        ).values()
+      );
+
+      setConversations(uniqueConversations);
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+    }
+  };
+
+  if (user?.uid) {
+    fetchUserConversations();
+  }
+}, [user?.uid]);
 
 
 
@@ -78,7 +105,8 @@ useEffect(() => {
     loading,
     socket,
     activeUsers,
-    setActiveUsers
+    setActiveUsers,
+    conversations
  
   };
 
