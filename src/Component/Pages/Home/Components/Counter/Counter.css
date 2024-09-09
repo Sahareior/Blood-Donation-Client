@@ -1,0 +1,54 @@
+.container {
+    position: relative; /* Ensure the container is positioned relative for overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    background-image: url('https://img.freepik.com/free-photo/medical-stethoscope-isolated-with-black-background-medical-concept-stethoscope-black-background-with-space-text-health-concept-medical-conceptual_1391-769.jpg?t=st=1725819529~exp=1725823129~hmac=4e0f35df57ec720b05084f915fd56f7959cc4e85c4f16a06c8ae6e0e1f416724&w=740');
+    background-size: cover; /* Ensure the background image covers the whole container */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent repeating the background image */
+}
+
+.container::before {
+    content: ""; /* Create a pseudo-element */
+    position: absolute; /* Position it absolutely within the container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+    z-index: 1; /* Place the overlay above the background but below the content */
+}
+
+.flex {
+    position: relative; /* Ensure the flex container is positioned relative to accommodate overlay */
+    z-index: 2; /* Ensure the flex content is above the overlay */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem; /* Space between items */
+}
+
+.counter-item {
+    width: calc(25% - 1rem);
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+    border-radius: 0.5rem; /* Rounded corners */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    padding: 1rem; /* Add padding for better layout */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for better contrast */
+    color: #fefefe; /* Text color to ensure readability on dark overlay */
+    text-align: center; /* Center align text */
+}
+
+@media (max-width: 768px) {
+    .counter-item {
+        width: calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .counter-item {
+        width: 100%;
+    }
+}

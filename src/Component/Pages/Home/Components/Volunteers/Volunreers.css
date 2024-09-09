@@ -1,0 +1,15 @@
+.Volunteers {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .title h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .image_wrapper {
+    display: inline-block;
+    text-align: center;
+  }
+  

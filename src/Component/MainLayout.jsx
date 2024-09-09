@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import About from './About';
+import About from './Registration';
 import Router from './Router/Router';
 import Donate from './Pages/Donete/Donate';
 import Req from './Pages/Client/Req/BloodDonnars';
 import Message from './Pages/Client/Message/Message';
 import BloodDonners from './Pages/Client/Req/BloodDonnars';
+import UserLogin from './Pages/Authentication/UserLogin';
+import Home from './Pages/Home/Home';
 
 
 
@@ -26,8 +28,8 @@ const client = true
 let items;
 if(client){
    items = [
-    getItem('Tset', '/', <PieChartOutlined />),
-    getItem('Login', '/about', <DesktopOutlined />),
+    getItem('Home', '/', <PieChartOutlined />),
+    getItem('Login', '/reg', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
       getItem('Donar Request', '/req'),
       getItem('Bill', '/user/bill'),
@@ -42,7 +44,7 @@ if(client){
 } else {
    items = [
     getItem('Option 1', '/donate', <PieChartOutlined />),
-    getItem('Option 2', '/option2', <DesktopOutlined />),
+    getItem('Registration', '/reg', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
       getItem('Tom', '/user/tom'),
       getItem('Bill', '/user/bill'),
@@ -60,8 +62,8 @@ if(client){
 
 
 const routes = {
-  '/': () => <div>This is Home</div>,
-  '/about': About ,
+  '/': Home,
+  '/reg': UserLogin ,
   '/req': BloodDonners,
   '/req/message': Message,
   '/user/tom': () => <div>Tom's Content</div>,
@@ -89,7 +91,7 @@ const MainLayout = () => {
   const path = window.location.pathname
   console.log(path)
   return (
-<div className={`${path =='' }`}>
+<div className="fixed w-full">
 <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className="demo-logo-vertical" />
@@ -103,11 +105,11 @@ const MainLayout = () => {
       </Sider>
       <Layout>
        
-        <Content style={{ margin: '0 16px' }}>
+        <Content style={{ margin: '0 6px' }}>
    
           <div
             style={{
-              padding: 24,
+              padding: 10,
               minHeight: 560,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
@@ -116,7 +118,7 @@ const MainLayout = () => {
             <Router routes={routes} />
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
+        <Footer style={{ textAlign: 'center',height: '20px' }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>

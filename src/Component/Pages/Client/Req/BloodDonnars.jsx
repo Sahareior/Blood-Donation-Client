@@ -2,30 +2,28 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MyContext } from '../../../../Provider/Myprovider';
 
 const BloodDonors = ({ navigate }) => {
-  const [activeUsers, setActiveUsers] = useState([]);
-  const { userData,user,socket } = useContext(MyContext);
+  // const [activeUsers, setActiveUsers] = useState([]);
+  const { userData, user,activeUsers } = useContext(MyContext);
 
-  useEffect(() => {
-    socket.current.emit('addUser', user);
-    socket.current.on("getUsers", users => {
-        setActiveUsers(users)
-    })
-}, [user,socket])
-
-console.log(activeUsers)
+  const updateData = userData?.filter(items => items?.uid !== user?.uid)
 
 
-const userId = user?.uid
-  const handleMessageClick = ( donorId) => {
-    console.log(userId)
+
+  const userId = user?.uid;
+
+  const handleMessageClick = (donorId) => {
     navigate(`/req/message?userId=${userId}&donorId=${donorId}`);
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {userData?.map((item) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-2">
+      {updateData?.map((item) => (
         <div key={item._id.$oid} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
-          <div className="flex items-center space-x-6">
+          <div className="relative flex items-center space-x-6">
+            <div
+              className={`absolute -top-1 -right-1 w-4 h-4 rounded-full ${activeUsers.includes(item.uid) ? 'bg-blue-500' : 'bg-gray-300'}`}
+              style={{ zIndex: 10 }}
+            ></div>
             <img
               className="w-24 h-24 rounded-full object-cover border-4 border-red-500"
               src={item.photoURL || 'https://via.placeholder.com/150'}
@@ -54,7 +52,7 @@ const userId = user?.uid
             </div>
 
             <button
-              onClick={() => handleMessageClick(item.uid, item._id.$oid)}
+              onClick={() => handleMessageClick(item.uid)}
               className="w-full mt-5 bg-blue-600 text-white py-2 rounded-full hover:bg-blue-700 transition-colors"
             >
               Message Now

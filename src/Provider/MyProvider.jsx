@@ -15,6 +15,7 @@ export const MyProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Initialize as null
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
+  const [activeUsers, setActiveUsers] = useState([]);
 
   useEffect(() => {
     socket.current = io('http://localhost:5000'); // Use http:// instead of ws://
@@ -38,6 +39,9 @@ useEffect(() => {
     };
   }
 }, [socket]);
+
+
+
 
 
   useEffect(() => {
@@ -72,7 +76,9 @@ useEffect(() => {
     user,
     userData,
     loading,
-    socket
+    socket,
+    activeUsers,
+    setActiveUsers
  
   };
 

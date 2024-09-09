@@ -3,7 +3,7 @@ import { MyContext } from '../Provider/Myprovider';
 import { signInWithPopup, GoogleAuthProvider,signOut } from "firebase/auth";
 import axios from 'axios';
 
-const About = () => {
+const Registration = () => {
     const { auth } = useContext(MyContext);
     const provider = new GoogleAuthProvider();
 
@@ -38,7 +38,7 @@ const About = () => {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            setUser(null);
+        
             console.log('User logged out successfully');
         } catch (error) {
             console.error('Error during logout:', error);
@@ -53,4 +53,4 @@ const About = () => {
     );
 };
 
-export default About;
+export default Registration;
