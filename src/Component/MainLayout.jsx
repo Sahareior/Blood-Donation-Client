@@ -13,6 +13,8 @@ import UserConversations from './Pages/UserConversations/UserConversations';
 import AllDoners from './Pages/Client/Req/AllDoners';
 import { MyContext } from '../Provider/Myprovider';
 import { ToastContainer } from 'react-toastify';
+import Profile from './Pages/Home/Components/EditProfile/Profile';
+import SignUp from './Pages/Authentication/SignUp';
 
 
 
@@ -40,7 +42,7 @@ if(client){
       getItem('All Donars', '/alldonars'),
     ]),
     getItem('Profile', 'sub2', <TeamOutlined />, [
-      getItem('Edit Profile', '/team1'),
+      getItem('Edit Profile', '/profile'),
     
     ]),
 
@@ -72,9 +74,9 @@ const routes = {
   '/req/message': Message,
   '/req/conversations': UserConversations,
   '/req/conversations/message':Message ,
-  '/user/tom': () => <div>Tom's Content</div>,
+  '/profile': Profile,
   '/alldonars':  AllDoners,
-  '/team1': () => <div>Team 1's Content</div>,
+  '/signup': SignUp,
   '/team2': () => <div>Team 2's Content</div>,
   '/files': () => <div>Files Content</div>,
   '/404': () => <div>Page Not Found</div>,
@@ -119,10 +121,11 @@ const MainLayout = () => {
           <div
             style={{
               padding: 10,
-              minHeight: 560,
+              minHeight: 460,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
+            
           >
             <Router routes={routes} />
           </div>

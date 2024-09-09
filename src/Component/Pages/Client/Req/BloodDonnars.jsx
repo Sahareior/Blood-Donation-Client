@@ -11,6 +11,8 @@ const BloodDonors = ({ navigate }) => {
   const newData = updateData.filter(data => activeUsers.includes(data.uid))
 
 
+
+
   const userId = user?.uid;
 
   const handleMessageClick = (donorId) => {
@@ -19,6 +21,9 @@ const BloodDonors = ({ navigate }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-2">
+      {
+        newData.length === 0 && <h3 className='text-2xl text-red-500'>No one is active this moment</h3>
+      }
       {newData?.map((item) => (
         <div key={item._id.$oid} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
           <div className="relative flex items-center space-x-6">
