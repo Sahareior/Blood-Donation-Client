@@ -2,6 +2,9 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from '../Firebase/Firebase.config';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from 'axios';
 import { io } from 'socket.io-client';
 
@@ -17,10 +20,16 @@ export const MyProvider = ({ children }) => {
   const [userData, setUserData] = useState([]);
   const [activeUsers, setActiveUsers] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const [incomingMessage, setIncomingMessage] = useState(null);
+  const [messageAlert, setMessageAlert] = useState(false)
 
   useEffect(() => {
     socket.current = io('http://localhost:5000'); // Use http:// instead of ws://
 }, []);
+
+
+
+
 
 useEffect(() => {
   console.log('Socket Initialized:', socket.current); // Log to ensure socket is initialized
@@ -42,6 +51,28 @@ useEffect(() => {
 }, [socket]);
 
 
+
+useEffect(() => {
+  if (socket.current) {
+    socket.current.on('getMessage', (data) => {
+      setIncomingMessage({
+        ...data,
+        createdAt: Date.now(),
+      });
+      
+       // Assuming data contains sender's name
+      toast.info("you have a new message!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+  }
+}, [socket]);
 
 
 useEffect(() => {
@@ -96,6 +127,8 @@ useEffect(() => {
     };
   }, []);
 
+  console.log(messageAlert)
+
   const name = "sijab"; // Example static value, replace as needed
   const values = {
     auth,
@@ -106,7 +139,10 @@ useEffect(() => {
     socket,
     activeUsers,
     setActiveUsers,
-    conversations
+    conversations,
+    incomingMessage,
+    setIncomingMessage,
+    setMessageAlert
  
   };
 

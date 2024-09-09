@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MyContext } from '../../../../Provider/Myprovider';
 
-const BloodDonors = ({ navigate }) => {
+const AllDoners = ({ navigate }) => {
   // const [activeUsers, setActiveUsers] = useState([]);
   const { userData, user,activeUsers } = useContext(MyContext);
 
   const updateData = userData?.filter(items => items?.uid !== user?.uid)
-  console.log(activeUsers)
+  
  
-  const newData = updateData.filter(data => activeUsers.includes(data.uid))
+
 
 
   const userId = user?.uid;
@@ -19,7 +19,7 @@ const BloodDonors = ({ navigate }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-2">
-      {newData?.map((item) => (
+      {updateData?.map((item) => (
         <div key={item._id.$oid} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
           <div className="relative flex items-center space-x-6">
             <div
@@ -66,4 +66,4 @@ const BloodDonors = ({ navigate }) => {
   );
 };
 
-export default BloodDonors;
+export default AllDoners;

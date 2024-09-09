@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import About from './Registration';
@@ -10,6 +10,9 @@ import BloodDonners from './Pages/Client/Req/BloodDonnars';
 import UserLogin from './Pages/Authentication/UserLogin';
 import Home from './Pages/Home/Home';
 import UserConversations from './Pages/UserConversations/UserConversations';
+import AllDoners from './Pages/Client/Req/AllDoners';
+import { MyContext } from '../Provider/Myprovider';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -32,9 +35,9 @@ if(client){
     getItem('Home', '/', <PieChartOutlined />),
     getItem('Login', '/reg', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Donar Request', '/req'),
+      getItem('Active Donars', '/req'),
       getItem('Conversations', '/req/conversations'),
-      getItem('Alex', '/user/alex'),
+      getItem('All Donars', '/alldonars'),
     ]),
     getItem('Profile', 'sub2', <TeamOutlined />, [
       getItem('Edit Profile', '/team1'),
@@ -49,7 +52,7 @@ if(client){
     getItem('User', 'sub1', <UserOutlined />, [
       getItem('Tom', '/user/tom'),
       getItem('Bill', '/user/bill'),
-      getItem('Alex', '/user/alex'),
+      getItem('All Donars', '/user/alex'),
     ]),
     getItem('Profile', 'sub2', <TeamOutlined />, [
       getItem('Team 1', '/team1'),
@@ -70,7 +73,7 @@ const routes = {
   '/req/conversations': UserConversations,
   '/req/conversations/message':Message ,
   '/user/tom': () => <div>Tom's Content</div>,
-  '/user/alex': () => <div>Alex's Content</div>,
+  '/alldonars':  AllDoners,
   '/team1': () => <div>Team 1's Content</div>,
   '/team2': () => <div>Team 2's Content</div>,
   '/files': () => <div>Files Content</div>,
@@ -80,6 +83,7 @@ const routes = {
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('/');
+  const {setMessageAlert} = useContext(MyContext)
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -91,9 +95,12 @@ const MainLayout = () => {
     window.dispatchEvent(new Event('popstate')); // Trigger popstate event
   };
   const path = window.location.pathname
-  console.log(path)
+   
+  setMessageAlert(path)
+
   return (
 <div className="fixed w-full">
+  <ToastContainer />
 <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className="demo-logo-vertical" />

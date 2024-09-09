@@ -4,10 +4,10 @@ import { FiSend } from 'react-icons/fi';
 import { MyContext } from '../../../../Provider/MyProvider';
 
 const Message = ({ queryParams }) => {
-  const { socket } = useContext(MyContext);
+  const { socket,setIncomingMessage,incomingMessage } = useContext(MyContext);
   const userId = queryParams?.userId;
   const donorId = queryParams?.donorId;
-  const [incomingMessage, setIncomingMessage] = useState(null);
+ 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [conversationId, setConversationId] = useState(null);
@@ -15,16 +15,7 @@ const Message = ({ queryParams }) => {
   // Reference to the message container
   const messageEndRef = useRef(null);
 
-  useEffect(() => {
-    if (socket.current) {
-      socket.current.on('getMessage', (data) => {
-        setIncomingMessage({
-          ...data,
-          createdAt: Date.now(),
-        });
-      });
-    }
-  }, [socket]);
+
 
   console.log(incomingMessage);
 
