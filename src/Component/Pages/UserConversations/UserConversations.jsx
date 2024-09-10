@@ -10,7 +10,6 @@ const UserConversations = ({ navigate }) => {
     const fetchUserConversations = async () => {
       try {
         const response = await axios.get(`https://blood-donar-server-production.up.railway.app/user-conversations/${user?.uid}`);
-        // Get the data from the response
         const conversationsData = response.data;
 
         // Filter out duplicate conversations based on the uid
@@ -56,12 +55,15 @@ const UserConversations = ({ navigate }) => {
   };
 
   const getLatestMessage = (conversation) => {
-    // Check if there's an incoming message for the current user
     if (incomingMessage?.receiverId === user?.uid && incomingMessage?.conversationId === conversation._id) {
       return incomingMessage.content;
     } else {
       return <div className='text-slate-900'>No new Message</div>;
     }
+  };
+
+  const hasNewMessage = (conversation) => {
+    return incomingMessage?.receiverId === user?.uid && incomingMessage?.conversationId === conversation._id;
   };
 
   return (
@@ -89,9 +91,19 @@ const UserConversations = ({ navigate }) => {
                   <p className="text-lg font-semibold text-gray-800">
                     {participant?.displayName || 'Anonymous User'}
                   </p>
-                  <p className="text-red-500 text-bold text-xl shadow-md truncate">
-                    {getLatestMessage(conversation)}
-                  </p>
+                  <div className="relative">
+                    {/* Conditionally render the "New!" badge */}
+                    {hasNewMessage(conversation) && (
+                      <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-lg">
+                        New!
+                      </span>
+                    )}
+                    
+                    {/* Message content */}
+                    <p className="text-red-600 font-bold text-lg sm:text-xl bg-gray-100 px-4 py-2 rounded-lg shadow-md truncate hover:bg-gray-200 transition-all duration-200 ease-in-out">
+                      {getLatestMessage(conversation)}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
