@@ -1,24 +1,25 @@
 import React, { useContext, useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import About from './Registration';
+import { Layout, Menu, theme } from 'antd';
+import { FiLogIn, FiLogOut, FiWifi } from 'react-icons/fi';
+import { GiWaterDrop } from "react-icons/gi";
+import { FcHome } from 'react-icons/fc';
+import { MyContext } from '../Provider/Myprovider';
 import Router from './Router/Router';
-import Donate from './Pages/Donete/Donate';
-import Req from './Pages/Client/Req/BloodDonnars';
-import Message from './Pages/Client/Message/Message';
-import BloodDonners from './Pages/Client/Req/BloodDonnars';
-import UserLogin from './Pages/Authentication/UserLogin';
 import Home from './Pages/Home/Home';
+import BloodDonners from './Pages/Client/Req/BloodDonnars';
+import Message from './Pages/Client/Message/Message';
 import UserConversations from './Pages/UserConversations/UserConversations';
 import AllDoners from './Pages/Client/Req/AllDoners';
-import { MyContext } from '../Provider/Myprovider';
-import { ToastContainer } from 'react-toastify';
 import Profile from './Pages/Home/Components/EditProfile/Profile';
+import UserLogin from './Pages/Authentication/UserLogin';
 import SignUp from './Pages/Authentication/SignUp';
+import { ToastContainer } from 'react-toastify';
+import { signOut } from 'firebase/auth';
+import Swal from 'sweetalert2'
+import Ddd from './Pages/Client/ddd/Ddd';
 
 
-
-const { Header, Content, Footer, Sider } = Layout;
+const { Sider, Content, Footer } = Layout;
 
 function getItem(label, key, icon, children) {
   return {
@@ -29,113 +30,129 @@ function getItem(label, key, icon, children) {
   };
 }
 
-
-const client = true
-let items;
-if(client){
-   items = [
-    getItem('Home', '/', <PieChartOutlined />),
-    getItem('Login', '/reg', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Active Donars', '/req'),
-      getItem('Conversations', '/req/conversations'),
-      getItem('All Donars', '/alldonars'),
-    ]),
-    getItem('Profile', 'sub2', <TeamOutlined />, [
-      getItem('Edit Profile', '/profile'),
-    
-    ]),
-
-  ];
-} else {
-   items = [
-    getItem('Option 1', '/donate', <PieChartOutlined />),
-    getItem('Registration', '/reg', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Tom', '/user/tom'),
-      getItem('Bill', '/user/bill'),
-      getItem('All Donars', '/user/alex'),
-    ]),
-    getItem('Profile', 'sub2', <TeamOutlined />, [
-      getItem('Team 1', '/team1'),
-      getItem('Team 2', '/team2'),
-    ]),
-    getItem('Files', '/files', <FileOutlined />),
-  ];
-}
-
-
-
-
 const routes = {
   '/': Home,
-  '/reg': UserLogin ,
+  '/reg': UserLogin,
   '/req': BloodDonners,
   '/req/message': Message,
   '/req/conversations': UserConversations,
-  '/req/conversations/message':Message ,
+  '/req/conversations/message': Message,
   '/profile': Profile,
-  '/alldonars':  AllDoners,
+  '/alldonars': AllDoners,
   '/signup': SignUp,
-  '/team2': () => <div>Team 2's Content</div>,
-  '/files': () => <div>Files Content</div>,
+  '/done': Ddd,
   '/404': () => <div>Page Not Found</div>,
 };
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('/');
-  const {setMessageAlert} = useContext(MyContext)
+  const { user, auth } = useContext(MyContext);  // Get user from context
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const handleMenuClick = (e) => {
-    setSelectedKey(e.key);
-    window.history.pushState({}, '', e.key);
-    window.dispatchEvent(new Event('popstate')); // Trigger popstate event
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log('User logged out successfully');
+      window.history.pushState({}, '', '/'); // Redirect to home
+      window.dispatchEvent(new Event('popstate')); // Trigger popstate for route change
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
-  const path = window.location.pathname
-   
-  setMessageAlert(path)
+
+  const handleMenuClick = (e) => {
+    if (e.key === '/logout') {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Please!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleLogout();
+         
+          Swal.fire({
+            title: "Logged Out!",
+            text: "Logged out successfully!",
+            icon: "success"
+          });
+         
+        }
+      });
+       // Call logout function if logout menu item is clicked
+    } else {
+      setSelectedKey(e.key);
+      window.history.pushState({}, '', e.key);
+      window.dispatchEvent(new Event('popstate')); // Trigger popstate event for navigation
+    }
+  };
+
+  // Dynamically set the menu items
+  const items = [
+    getItem('Home', '/', <FcHome />),
+    user
+      ? getItem('Logout', '/logout', <FiLogOut />)  // Show "Logout" if user is logged in
+      : getItem('Login', '/reg', <FiLogIn />),      // Show "Login" if user is not logged in
+    getItem('Connectivity', 'sub1', <FiWifi />, [
+      getItem('Active Donars', '/req'),
+      getItem('Conversations', '/req/conversations'),
+      getItem('All Donars', '/alldonars'),
+    ]),
+    getItem('Be a Doner', 'sub2', <GiWaterDrop />, [
+      getItem('Edit Profile', '/profile'),
+    ]),
+  ];
 
   return (
-<div className="fixed w-full">
-  <ToastContainer />
-<Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          selectedKeys={[selectedKey]}
-          mode="inline"
-          items={items}
-          onClick={handleMenuClick}
-        />
-      </Sider>
-      <Layout>
-       
-        <Content style={{ margin: '0 6px' }}>
-   
-          <div
-            style={{
-              padding: 10,
-              minHeight: 460,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-            
-          >
-            <Router routes={routes} />
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center',height: '20px' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+    <div className="fixed z-40 w-full">
+      <ToastContainer />
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sider
+        className='z-40 '
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          breakpoint="sm" // Collapse when screen size is smaller than 'sm' (576px)
+          collapsedWidth="0" // Hide sider completely on mobile
+          width={250} // Set width for larger screens
+        >
+          <Menu
+            theme="dark"
+            selectedKeys={[selectedKey]}
+            mode="inline"
+            items={items}
+            onClick={handleMenuClick} // Handle menu click
+            style={{ overflow: 'auto' }} // Prevent overflow issues
+          />
+        </Sider>
+        <Layout>
+          <Content style={{ margin: '0 3px' }}>
+            <div
+              style={{
+                padding: 5,
+                minHeight: 60,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              <Router routes={routes} />
+            </div>
+          </Content>
+          <Footer style={{ textAlign: 'center', height: '20px', fontSize: '12px' }}>
+            LifeGuards ©{new Date().getFullYear()} Created by Sahareior Sijan
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
-</div>
+
+    </div>
   );
 };
 

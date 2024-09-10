@@ -22,9 +22,11 @@ export const MyProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
   const [incomingMessage, setIncomingMessage] = useState(null);
   const [messageAlert, setMessageAlert] = useState(false)
+  const [name,setName] =useState("")
+  const [isLoading,setIsLoading] = useState(true)
 
   useEffect(() => {
-    socket.current = io('http://localhost:5000'); // Use http:// instead of ws://
+    socket.current = io('https://blood-donar-server-production.up.railway.app'); // Use http:// instead of ws://
 }, []);
 
 
@@ -75,37 +77,14 @@ useEffect(() => {
 }, [socket]);
 
 
-useEffect(() => {
-  const fetchUserConversations = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/user-conversations/${user?.uid}`);
-      // Get the data from the response
-      const conversationsData = response.data;
-
-      // Filter out duplicate conversations based on the uid
-      const uniqueConversations = Array.from(
-        new Map(
-          conversationsData.map((item) => [item.participants[0].uid, item])
-        ).values()
-      );
-
-      setConversations(uniqueConversations);
-    } catch (error) {
-      console.error('Error fetching conversations:', error);
-    }
-  };
-
-  if (user?.uid) {
-    fetchUserConversations();
-  }
-}, [user?.uid]);
 
 
+// console.log(conversations)
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/users');
+        const res = await axios.get('https://blood-donar-server-production.up.railway.app/users');
         setUserData(res.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -127,12 +106,9 @@ useEffect(() => {
     };
   }, []);
 
-  console.log(messageAlert)
 
-  const name = "sijab"; // Example static value, replace as needed
   const values = {
     auth,
-    name,
     user,
     userData,
     loading,
@@ -142,7 +118,11 @@ useEffect(() => {
     conversations,
     incomingMessage,
     setIncomingMessage,
-    setMessageAlert
+    setMessageAlert,
+    name,
+    setName,
+    setConversations,
+    isLoading,setIsLoading
  
   };
 

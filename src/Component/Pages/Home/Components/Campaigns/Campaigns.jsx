@@ -43,16 +43,30 @@ export default function Campaigns() {
     <div className="h-screen flex flex-col items-center justify-center">
       <h2 className="font-bold text-4xl text-center mb-8">Popular Campaigns</h2>
       <Swiper
-        slidesPerView={3}
-        spaceBetween={30}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[Pagination]}
-        className="mySwiper"
-        style={{ width: '80%', height: '70vh' }}  // Increased the height for larger cards
-      >
-
+  slidesPerView={3}  // Default for large screens
+  spaceBetween={30}
+  pagination={{
+    clickable: true,
+  }}
+  breakpoints={{
+    // Adjust the number of slides per view for different screen sizes
+    320: {
+      slidesPerView: 1,  // For small screens like mobile
+      spaceBetween: 10,
+    },
+    640: {
+      slidesPerView: 2,  // For medium-sized screens like tablets
+      spaceBetween: 20,
+    },
+    1024: {
+      slidesPerView: 3,  // For larger screens
+      spaceBetween: 30,
+    },
+  }}
+  modules={[Pagination]}
+  className="mySwiper"
+  style={{ width: '80%', height: '70vh' }}  // Increased the height for larger cards
+>
  {
     campaignData.map(items => (
         <SwiperSlide key={items.date}>

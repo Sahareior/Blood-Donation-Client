@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
+import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit } from 'react-icons/fi'
+import Swal from 'sweetalert2'
 import { MyContext } from '../../../../../Provider/Myprovider';
 
 const Profile = () => {
   const [profile, setProfile] = useState({
     displayName: '',
-    email: '',
     phoneNumber: '',
     bloodGroup: '',
     state: '',
@@ -18,7 +19,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/users/${user?.uid}`);
+        const res = await axios.get(`https://blood-donar-server-production.up.railway.app/users/${user?.uid}`);
         setProfile(res.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -37,146 +38,189 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting form with data:', profile);  // Add this line
+  
+    // Validation to check if any field is missing
+    if (
+      !profile.displayName ||
+      !profile.phoneNumber ||
+      !profile.bloodGroup ||
+      !profile.state ||
+      !profile.city ||
+      !profile.zipCode
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Information',
+        text: 'Please fill in all the required fields!',
+      });
+      return;
+    }
+  
+    // Add the donor: 'yes' field before sending the request
+    const profileWithDonor = { ...profile, donor: 'yes' };
+  
     try {
-      const res = await axios.put(`http://localhost:5000/users/${user?.uid}`, profile);
-      console.log('Response:', res.data);
-      alert(res.data.message);
+      const res = await axios.put(`https://blood-donar-server-production.up.railway.app/users/${user?.uid}`, profileWithDonor);
+      Swal.fire({
+        icon: 'success',
+        title: 'Profile Updated',
+        text: res.data.message,
+      });
       setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error.response ? error.response.data : error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: error.response ? error.response.data : error.message,
+      });
     }
   };
   
   
   
+  
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Profile</h1>
-      {isEditing ? (
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+    <h1 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Please complete all required fields to register as a blood donor.</h1>
+    {isEditing ? (
       <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex gap-8">
-        {/* Left Column */}
-        <div className="flex flex-col gap-6 w-1/2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
-            <input
-              type="text"
-              name="displayName"
-              value={profile.displayName}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+        <div className="flex gap-8">
+          {/* Left Column */}
+          <div className="flex flex-col gap-6 w-1/2">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                type="text"
+                name="displayName"
+                value={profile.displayName}
+                onChange={handleChange}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
+  
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={profile.phoneNumber}
+                onChange={handleChange}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
+  
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Blood Group</label>
+              <input
+                type="text"
+                name="bloodGroup"
+                value={profile.bloodGroup}
+                onChange={handleChange}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
           </div>
-    
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={profile.email}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-    
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input
-              type="text"
-              name="phoneNumber"
-              value={profile.phoneNumber}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-    
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Blood Group</label>
-            <input
-              type="text"
-              name="bloodGroup"
-              value={profile.bloodGroup}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-    
-        {/* Right Column */}
-        <div className="flex flex-col gap-6 w-1/2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">State</label>
-            <input
-              type="text"
-              name="state"
-              value={profile.state}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-    
-          <div>
-            <label className="block text-sm font-medium text-gray-700">City</label>
-            <input
-              type="text"
-              name="city"
-              value={profile.city}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-    
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Zip Code</label>
-            <input
-              type="text"
-              name="zipCode"
-              value={profile.zipCode}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+  
+          {/* Right Column */}
+          <div className="flex flex-col gap-6 w-1/2">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">State</label>
+              <input
+                type="text"
+                name="state"
+                value={profile.state}
+                onChange={handleChange}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
+  
+            <div>
+              <label className="block text-sm font-medium text-gray-700">City</label>
+              <input
+                type="text"
+                name="city"
+                value={profile.city}
+                onChange={handleChange}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
+  
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Zip Code</label>
+              <input
+                type="text"
+                name="zipCode"
+                value={profile.zipCode}
+                onChange={handleChange}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    
-      <div className="flex justify-end mt-6">
-        <button
-          type="submit"
-          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-all"
-        >
-          Save Changes
-        </button>
-        <button
-          type="button"
-          className="ml-4 px-6 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition-all"
-          onClick={() => setIsEditing(false)}
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-    
-      ) : (
-        <div>
-          <p className="text-lg font-medium">Name: {profile.displayName || 'N/A'}</p>
-          <p className="text-lg font-medium">Email: {profile.email || 'N/A'}</p>
-          <p className="text-lg font-medium">Phone Number: {profile.phoneNumber || 'N/A'}</p>
-          <p className="text-lg font-medium">Blood Group: {profile.bloodGroup || 'N/A'}</p>
-          <p className="text-lg font-medium">State: {profile.state || 'N/A'}</p>
-          <p className="text-lg font-medium">City: {profile.city || 'N/A'}</p>
-          <p className="text-lg font-medium">Zip Code: {profile.zipCode || 'N/A'}</p>
-
+  
+        <div className="flex justify-end mt-6 space-x-4">
           <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
-            onClick={() => setIsEditing(true)}
+            type="submit"
+            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-transform duration-200 transform hover:scale-105"
           >
-            Edit Profile
+            Save Changes
+          </button>
+          <button
+            type="button"
+            className="px-6 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition-transform duration-200 transform hover:scale-105"
+            onClick={() => setIsEditing(false)}
+          >
+            Cancel
           </button>
         </div>
-      )}
+      </form>
+    ) : (
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto mt-8">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Profile Details</h2>
+      <div className="space-y-4">
+        <div className="flex items-center space-x-4">
+          <FiUser className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">Name: <span className="font-semibold">{profile.displayName || 'N/A'}</span></p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FiMail className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">Email: <span className="font-semibold">{profile.email || 'N/A'}</span></p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FiPhone className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">Phone Number: <span className="font-semibold">{profile.phoneNumber || 'N/A'}</span></p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FiUser className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">Blood Group: <span className="font-semibold">{profile.bloodGroup || 'N/A'}</span></p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FiMapPin className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">State: <span className="font-semibold">{profile.state || 'N/A'}</span></p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FiMapPin className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">City: <span className="font-semibold">{profile.city || 'N/A'}</span></p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FiMapPin className="text-blue-500 w-6 h-6" />
+          <p className="text-lg font-medium text-gray-700">Zip Code: <span className="font-semibold">{profile.zipCode || 'N/A'}</span></p>
+        </div>
+      </div>
+      
+      <div className="flex justify-center mt-6">
+        <button
+          className="flex items-center space-x-2 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-transform duration-200 transform hover:scale-105"
+          onClick={() => setIsEditing(true)}
+        >
+          <FiEdit className="w-5 h-5" />
+          <span>Edit Profile</span>
+        </button>
+      </div>
     </div>
+    )}
+  </div>  
   );
 };
 

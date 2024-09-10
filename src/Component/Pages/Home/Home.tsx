@@ -16,11 +16,13 @@ export default function Home() {
     <>
     <Swiper
       direction={'vertical'}
+      
       pagination={{ clickable: true }}
       mousewheel={true}
       modules={[Pagination, Mousewheel]}
       className="mySwiper"
       style={{ height: '100vh' }}
+      
     >
         <SwiperSlide>
           <Slider />

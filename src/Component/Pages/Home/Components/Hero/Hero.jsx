@@ -20,24 +20,31 @@ const Hero = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center py-10 bg-gray-100">
-      <h1 className="text-4xl font-bold mb-8">Blood Donation Overview</h1>
-      <div className="grid grid-cols-1 -mt-7 md:grid-cols-3 gap-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-4 md:py-10">
+      <h1 className="text-xl md:text-3xl font-bold mb-4 md:mb-8 text-gray-800">
+        Blood Donation Overview
+      </h1>
+
+      {/* Grid layout for cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 w-[90vw] md:w-[80vw]">
         {data.map((item, index) => (
-          <div
+          <div 
             key={index}
-            className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center hover:shadow-2xl transition-shadow duration-300"
+            className="bg-white shadow-md rounded-md p-3 md:p-6 hover:shadow-lg transform transition-all duration-300 ease-in-out"
           >
-            <img
-              src={item.image}
-              alt={item.heading}
-              className="w-full h-60 mb-4 object-cover"
+            <img 
+              src={item.image} 
+              alt={item.heading} 
+              className="w-full h-24 md:h-40 object-cover rounded-md mb-2 md:mb-4"
             />
-            <h2 className="text-xl font-semibold mb-2">{item.heading}</h2>
-            <p className="text-gray-600 text-center">{item.content}</p>
-            <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300">
-              Learn More
-            </button>
+            <div className="text-center">
+              <h3 className="text-sm md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">
+                {item.heading}
+              </h3>
+              <p className="text-xs md:text-base text-gray-600">
+                {item.content}
+              </p>
+            </div>
           </div>
         ))}
       </div>

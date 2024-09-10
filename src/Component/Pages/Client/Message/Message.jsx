@@ -4,9 +4,10 @@ import { FiSend } from 'react-icons/fi';
 import { MyContext } from '../../../../Provider/MyProvider';
 
 const Message = ({ queryParams }) => {
-  const { socket,setIncomingMessage,incomingMessage } = useContext(MyContext);
+  const { socket,setIncomingMessage,incomingMessage,name } = useContext(MyContext);
   const userId = queryParams?.userId;
   const donorId = queryParams?.donorId;
+  
  
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -32,7 +33,7 @@ const Message = ({ queryParams }) => {
   useEffect(() => {
     const getOrCreateConversation = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/conversations', {
+        const res = await axios.get('https://blood-donar-server-production.up.railway.app/conversations', {
           params: { userId, donorId },
         });
 
@@ -43,7 +44,7 @@ const Message = ({ queryParams }) => {
       } catch (error) {
         if (error.response && error.response.status === 404) {
           try {
-            const response = await axios.post('http://localhost:5000/conversations', { userId, donorId });
+            const response = await axios.post('https://blood-donar-server-production.up.railway.app/conversations', { userId, donorId });
             setConversationId(response.data._id);
             console.log('New conversation created:', response.data);
           } catch (err) {
@@ -69,7 +70,7 @@ const Message = ({ queryParams }) => {
     const fetchMessages = async () => {
       if (conversationId) {
         try {
-          const response = await axios.get(`http://localhost:5000/messages/${conversationId}`);
+          const response = await axios.get(`https://blood-donar-server-production.up.railway.app/messages/${conversationId}`);
           setMessages(response.data);
           console.log('Fetched messages:', response.data);
         } catch (err) {
@@ -93,7 +94,7 @@ const Message = ({ queryParams }) => {
 
         socket.current.emit('sendMessage', message);
 
-        const response = await axios.post('http://localhost:5000/messages', message);
+        const response = await axios.post('https://blood-donar-server-production.up.railway.app/messages', message);
         const newMessage = response.data;
 
         setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -110,12 +111,12 @@ const Message = ({ queryParams }) => {
   }, [incomingMessage]);
 
   return (
-    <div className="flex flex-col h-[530px]">
+    <div className="flex flex-col h-[90vh]">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-green-600 text-white">
         <div>
-          <h2 className="text-lg font-semibold">Chat with Yusuf</h2>
-          <p className="text-sm text-gray-200">Online</p>
+          <h2 className="text-lg font-semibold">{name}</h2>
+          {/* <p className="text-sm text-gray-200">Online</p> */}
         </div>
       </div>
 

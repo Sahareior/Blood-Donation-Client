@@ -1,12 +1,52 @@
-import React from 'react';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import React, { useContext } from 'react';
 // Import Google icon (you can use React Icons or an SVG for the Google icon)
 import { FcGoogle } from 'react-icons/fc'; 
+import { MyContext } from '../../../Provider/Myprovider';
+import axios from 'axios';
 
 const UserLogin = ({navigate}) => {
-  const handleGoogleSignIn = () => {
-    // Add your Google sign-in logic here, e.g., Firebase Authentication
-    console.log("Google Sign In Clicked");
-  };
+  const { auth,user } = useContext(MyContext);
+    const provider = new GoogleAuthProvider();
+
+    const handleLogin = async () => {
+
+        try {
+            // Sign in with Google
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+          
+
+            // Post user data to the backend
+            const userData = {
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+                uid: user.uid
+            };
+
+            await axios.post('https://blood-donar-server-production.up.railway.app/user', userData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('User data posted successfully');
+        } catch (error) {
+            console.error('Error during login or posting user data:', error);
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+        
+            console.log('User logged out successfully');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
 
   const handleMessageClick = () => {
     navigate("/signup");
@@ -14,8 +54,9 @@ const UserLogin = ({navigate}) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Welcome Back</h2>
+    {
+      !user? (  <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Welcome</h2>
         <form>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-2">
@@ -49,8 +90,8 @@ const UserLogin = ({navigate}) => {
 
         {/* Sign in with Google button */}
         <button
-          onClick={handleGoogleSignIn}
-          className="w-full py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-100 transition duration-300 flex items-center justify-center space-x-2"
+          onClick={handleLogin}
+          className="w-full py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-900 transition duration-300 flex items-center justify-center space-x-2"
         >
           <FcGoogle className="text-2xl" /> 
           <span>Sign in with Google</span>
@@ -68,7 +109,10 @@ const UserLogin = ({navigate}) => {
   </a>
 </p>
 
-      </div>
+      </div>):(
+        <div className='text-4xl flex justify-center items-center'>Thanks For Joining!</div>
+      )
+    }
     </div>
   );
 };
