@@ -109,3 +109,11 @@
 	-webkit-transition-delay: 0s;
 					transition-delay: 0s;
 }
+/* In your styles.css */
+.slider-wrapper {
+	touch-action: pan-y !important;
+  }
+  
+  .slider-content {
+	touch-action: pan-y !important;
+  }

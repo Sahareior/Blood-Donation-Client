@@ -1,51 +1,59 @@
 import React from 'react';
+import { Card, Button } from 'antd';
+import { HeartFilled } from '@ant-design/icons';
 
 const Hero = () => {
   const data = [
     {
-      image: "https://croptheme.com/tm/blut/blut-ltr/assets/images/overview/donor.png",
+      image: "https://img.freepik.com/free-photo/close-up-volunteer-teamwork-join-hands-environment-conservation-volunteering-world-environment-day_640221-254.jpg?ga=GA1.1.10786356.1696485729&semt=ais_hybrid",
       heading: "Become a Donor",
-      content: "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give pleasure",
+      content: "Join us in saving lives through the power of blood donation. One donation can save up to three lives!",
     },
     {
-      image: "https://croptheme.com/tm/blut/blut-ltr/assets/images/overview/donor.png",
+      image: "https://img.freepik.com/premium-photo/three-volunteers-come-together-community-collecting-donations-charity-spreading-hope-happiness_1103944-15670.jpg?ga=GA1.1.10786356.1696485729&semt=ais_hybrid",
       heading: "Why Give Blood?",
-      content: "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give pleasure",
+      content: "Every two seconds someone needs blood. Your donation helps hospitals, surgeries, and emergency care.",
     },
     {
-      image: "https://croptheme.com/tm/blut/blut-ltr/assets/images/overview/donor.png",
-      heading: "How Donations Helps",
-      content: "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give pleasure",
+      image: "https://img.freepik.com/free-photo/environment-volunteer-teamwork-concept_23-2147807229.jpg?ga=GA1.1.10786356.1696485729&semt=ais_hybrid",
+      heading: "How Donations Help",
+      content: "Blood donations are essential for treatments, surgeries, and supporting those with chronic illnesses.",
     },
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-4 md:py-10">
-      <h1 className="text-xl md:text-3xl font-bold mb-4 md:mb-8 text-gray-800">
-        Blood Donation Overview
+    <div className="bg-gradient-to-b from-red-50 to-white py-10 px-4 min-h-screen flex flex-col items-center justify-start">
+      <h1 className="text-xl md:text-4xl font-bold text-center text-red-600 mb-3 tracking-tight">
+        💉 Blood Donation Overview
       </h1>
+      <p className="text-sm md:text-lg text-gray-600 text-center max-w-xl mb-8">
+        Empower lives by giving hope. Learn how your contribution makes a difference.
+      </p>
 
-      {/* Grid layout for cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 w-[90vw] md:w-[80vw]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
         {data.map((item, index) => (
-          <div 
+          <Card
             key={index}
-            className="bg-white shadow-md rounded-md p-3 md:p-6 hover:shadow-lg transform transition-all duration-300 ease-in-out"
+            hoverable
+            cover={
+              <img
+                alt={item.heading}
+                src={item.image}
+                className="h-52 object-cover"
+              />
+            }
+            className="rounded-xl py-5 shadow-lg transition-transform duration-300 hover:scale-[1.03]"
+            actions={[
+              <Button type="primary" icon={<HeartFilled />} size="small" key="donate">
+                Learn More
+              </Button>,
+            ]}
           >
-            <img 
-              src={item.image} 
-              alt={item.heading} 
-              className="w-full h-24 md:h-40 object-cover rounded-md mb-2 md:mb-4"
+            <Card.Meta
+              title={<span className="text-lg font-semibold text-red-700">{item.heading}</span>}
+              description={<p className="text-gray-600 text-sm mt-2">{item.content}</p>}
             />
-            <div className="text-center">
-              <h3 className="text-sm md:text-lg font-semibold text-gray-800 mb-1 md:mb-2">
-                {item.heading}
-              </h3>
-              <p className="text-xs md:text-base text-gray-600">
-                {item.content}
-              </p>
-            </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

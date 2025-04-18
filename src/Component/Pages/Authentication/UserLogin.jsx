@@ -1,118 +1,134 @@
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import React, { useContext } from 'react';
-// Import Google icon (you can use React Icons or an SVG for the Google icon)
-import { FcGoogle } from 'react-icons/fc'; 
-import { MyContext } from '../../../Provider/Myprovider';
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import axios from 'axios';
+import { FcGoogle } from 'react-icons/fc';
+import { MyContext } from '../../../Provider/Myprovider';
+import { Card, Input, Button, Typography, Divider } from 'antd';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { RiDropFill } from 'react-icons/ri';
 
-const UserLogin = ({navigate}) => {
-  const { auth,user } = useContext(MyContext);
-    const provider = new GoogleAuthProvider();
+const { Title, Text } = Typography;
 
-    const handleLogin = async () => {
+const UserLogin = ({ navigate }) => {
+  const { auth, user } = useContext(MyContext);
+  const provider = new GoogleAuthProvider();
 
-        try {
-            // Sign in with Google
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-          
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-            // Post user data to the backend
-            const userData = {
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-                email: user.email,
-                phoneNumber: user.phoneNumber,
-                uid: user.uid
-            };
+      const userData = {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        uid: user.uid,
+      };
 
-            await axios.post('https://blood-donar-server-production.up.railway.app/user', userData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+      await axios.post('https://blood-donar-server-zf9x.onrender.com/user', userData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-            console.log('User data posted successfully');
-        } catch (error) {
-            console.error('Error during login or posting user data:', error);
-        }
-    };
+      console.log('User data posted successfully');
+    } catch (error) {
+      console.error('Error during login or posting user data:', error);
+    }
+  };
 
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-        
-            console.log('User logged out successfully');
-        } catch (error) {
-            console.error('Error during logout:', error);
-        }
-    };
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log('User logged out successfully');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   const handleMessageClick = () => {
-    navigate("/signup");
+    navigate('/signup');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-    {
-      !user? (  <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Welcome</h2>
-        <form>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter your email"
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-600 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter your password"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-36 flex justify-center mx-auto py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300 mb-4"
-          >
-            Log In
-          </button>
-        </form>
-
-        {/* Sign in with Google button */}
-        <button
-          onClick={handleLogin}
-          className="w-full py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-900 transition duration-300 flex items-center justify-center space-x-2"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-white to-red-50 px-4">
+      {!user ? (
+        <Card 
+          className="w-full max-w-md shadow-2xl rounded-xl border-0 overflow-hidden" 
+          bordered={false}
+          headStyle={{ border: 0 }}
+          bodyStyle={{ padding: '32px' }}
         >
-          <FcGoogle className="text-2xl" /> 
-          <span>Sign in with Google</span>
-        </button>
+          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-600 to-red-800"></div>
+          
+          <div className="flex flex-col items-center mb-6">
+            <RiDropFill className="text-4xl text-red-600 mb-2" />
+            <Title level={2} className="text-center mb-0 text-red-800 font-bold">
+              Blood Donor Portal
+            </Title>
+            <Text type="secondary" className="text-gray-600">Sign in to save lives</Text>
+          </div>
 
-        <p className="text-sm text-gray-500 text-center mt-6">
-  Don't have an account? 
-  <a href="#" className="inline-block">
-    <button
-      className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300 ease-in-out"
-      onClick={() => handleMessageClick()}
-    >
-      Sign Up
-    </button>
-  </a>
-</p>
+          <div className="space-y-4">
+            <Input
+              size="large"
+              placeholder="Enter your email"
+              prefix={<MailOutlined className="text-red-500" />}
+              className="rounded-lg hover:border-red-300 focus:border-red-500"
+            />
+            <Input.Password
+              size="large"
+              placeholder="Enter your password"
+              prefix={<LockOutlined className="text-red-500" />}
+              className="rounded-lg hover:border-red-300 focus:border-red-500"
+            />
+            <Button
+              type="primary"
+              size="large"
+              block
+              className="bg-red-600 hover:bg-red-700 transition-all duration-300 h-10 rounded-lg font-semibold border-0 shadow-md"
+            >
+              Log In
+            </Button>
+          </div>
 
-      </div>):(
-        <div className='text-4xl flex justify-center items-center'>Thanks For Joining!</div>
-      )
-    }
+          <Divider className="text-gray-400 before:bg-gray-300 after:bg-gray-300">or</Divider>
+
+          <div className="mb-6">
+            <Button
+              onClick={handleLogin}
+              size="large"
+              block
+              className="flex items-center justify-center gap-2 border border-gray-300 hover:border-red-300 hover:text-red-600 transition-all duration-300 h-10 rounded-lg font-medium"
+              icon={<FcGoogle className="text-xl" />}
+            >
+              Continue with Google
+            </Button>
+          </div>
+
+          <div className="text-center">
+            <Text type="secondary" className="text-gray-600">Don't have an account?</Text>
+            <Button
+              type="link"
+              className="ml-2 text-red-600 hover:text-red-800 font-medium p-0 h-auto"
+              onClick={handleMessageClick}
+            >
+              Register now
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <div className="text-center p-8 bg-white rounded-xl shadow-xl max-w-md">
+          <RiDropFill className="text-5xl text-red-600 mx-auto mb-4" />
+          <Title level={3} className="text-red-800 mb-2">
+            Thank you for joining!
+          </Title>
+          <Text className="text-gray-600">
+            Your registration helps save lives. Check your dashboard to find donation opportunities.
+          </Text>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,7 +10,7 @@ const content = [
     description:
       "Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras justo odio, dapibus ac facilisis.",
     button: "Read More",
-    image: "https://i.imgur.com/ZXBtVw7.jpg",
+    image: "https://img.freepik.com/free-vector/illustration-people-donating-blood_23-2148246357.jpg?t=st=1725979985~exp=1725983585~hmac=38e91f481f7cdad1017f5b1ad680711ec2910665d3d250c909b58cd84c76e345&w=740",
    
   },
   {
@@ -18,7 +18,7 @@ const content = [
     description:
       "Nullam id dolor id nibh ultricies vehicula ut id elit. Cras mattis consectetur purus sit amet fermentum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Donec sed odio dui.",
     button: "Discover",
-    image: "https://i.imgur.com/DCdBXcq.jpg",
+    image: "https://img.freepik.com/premium-vector/poster-campaign-world-blood-donor-day-papercut-style-3d-isometric-white-background_36555-996.jpg?w=740",
 
   },
   {
@@ -26,7 +26,7 @@ const content = [
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
     button: "Buy now",
-    image: "https://i.imgur.com/DvmN8Hx.jpg",
+    image: "https://img.freepik.com/free-psd/donate-blood-campaign-banner-style_23-2148690139.jpg?t=st=1725980102~exp=1725983702~hmac=7cd3b38d82c515e7ad0e70b5b1fe17b731828f9a4ebc2ce4f2f593bdc7308080&w=826",
  
   }
 ];

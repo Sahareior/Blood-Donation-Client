@@ -18,4 +18,7 @@
   .active {
     @apply bg-blue-500 text-white;
   }
-  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(15deg); }
+    100% { transform: translateX(100%) rotate(15deg); }
+  }

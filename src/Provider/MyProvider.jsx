@@ -25,8 +25,10 @@ export const MyProvider = ({ children }) => {
   const [name,setName] =useState("")
   const [isLoading,setIsLoading] = useState(true)
 
+  // https://blood-donar-server-zf9x.onrender.com
+
   useEffect(() => {
-    socket.current = io('https://blood-donar-server-production.up.railway.app'); // Use http:// instead of ws://
+    socket.current = io('https://blood-donar-server-zf9x.onrender.com'); // Use http:// instead of ws://
 }, []);
 
 
@@ -84,8 +86,9 @@ useEffect(() => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await axios.get('https://blood-donar-server-production.up.railway.app/users');
+        const res = await axios.get('https://blood-donar-server-zf9x.onrender.com/users');
         setUserData(res.data);
+        setLoading(false)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -114,6 +117,7 @@ useEffect(() => {
     loading,
     socket,
     activeUsers,
+    setLoading,
     setActiveUsers,
     conversations,
     incomingMessage,

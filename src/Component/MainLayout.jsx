@@ -134,21 +134,22 @@ const MainLayout = () => {
           />
         </Sider>
         <Layout>
-          <Content style={{ margin: '0 3px' }}>
-            <div
-              style={{
-                padding: 5,
-                minHeight: 60,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-              }}
-            >
-              <Router routes={routes} />
-            </div>
-          </Content>
-          <Footer style={{ textAlign: 'center', height: '20px', fontSize: '12px' }}>
+        <Content style={{ margin: '0 3px', height: '100vh', overflowY: 'auto' }}>
+  <div
+    style={{
+      padding: 5,
+      minHeight: '100%',
+      background: colorBgContainer,
+      borderRadius: borderRadiusLG,
+    }}
+  >
+    <Router routes={routes} />
+  </div>
+</Content>
+
+          {/* <Footer style={{ textAlign: 'center', height: '20px', fontSize: '12px' }}>
             LifeGuards ©{new Date().getFullYear()} Created by Sahareior Sijan
-          </Footer>
+          </Footer> */}
         </Layout>
       </Layout>
 

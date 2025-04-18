@@ -1,43 +1,66 @@
 import React from 'react';
 import CountUp from 'react-countup';
-import './Counter.css'
+import { useInView } from 'react-intersection-observer';
+import { Card, Row, Col } from 'antd';
+import {
+  CalendarOutlined,
+  TeamOutlined,
+  TrophyOutlined,
+  SmileOutlined,
+} from '@ant-design/icons';
+
+const stats = [
+  { label: 'Years Experience',    value: 10,   icon: <CalendarOutlined /> },
+  { label: 'Donors',               value: 1500, icon: <TeamOutlined />     },
+  { label: 'Awards',               value: 25,   icon: <TrophyOutlined />   },
+  { label: 'Happy Recipients',     value: 3000, icon: <SmileOutlined />    },
+];
 
 const Counter = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.3,
+  });
+
   return (
     <div
-      className='w-full h-screen'
+      ref={ref}
+      className="relative w-full min-h-screen bg-cover bg-center"
       style={{
-        backgroundImage: 'url("https://img.freepik.com/free-photo/medical-stethoscope-isolated-with-black-background-medical-concept-stethoscope-black-background-with-space-text-health-concept-medical-conceptual_1391-769.jpg?t=st=1725819529~exp=1725823129~hmac=4e0f35df57ec720b05084f915fd56f7959cc4e85c4f16a06c8ae6e0e1f416724&w=740")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'left',
-        backgroundRepeat: 'no-repeat',
-        backgroundPositionY: ''
+        backgroundImage:
+          'url("https://img.freepik.com/free-photo/medical-stethoscope-isolated-with-black-background-medical-concept_1391-769.jpg")',
       }}
     >
-      {/* Flexbox container for centering */}
-      <div className="flex flex-col justify-center -mt-5 items-center h-full">
-        <div className="flex flex-col md:flex-row justify-around items-center gap-5 md:gap-20">
-          <div className="counter-item p-2 md:p-5 rounded-lg shadow-lg text-center text-red-500 bg-white bg-opacity-80">
-            <h3 className="md:text-3xl text-2xl font-bold mb-2">Experience</h3>
-            <CountUp end={10} duration={8} className="text-2xl md:text-3xl font-semibold" />
-            <p className="text-red-400 text-sm mt-1">Years</p>
-          </div>
-          <div className="counter-item p-2 md:p-4 rounded-lg shadow-lg text-center text-red-500 bg-white bg-opacity-80">
-            <h3 className="md:text-3xl text-2xl font-bold mb-2">Donors</h3>
-            <CountUp end={1500} duration={8} className="text-2xl md:text-3xl font-semibold" />
-            <p className="text-red-400 texy-sm mt-1">People</p>
-          </div>
-          <div className="counter-item p-2 md:p-4 rounded-lg shadow-lg text-center text-red-500 bg-white bg-opacity-80">
-            <h3 className="md:text-3xl text-2xl font-bold mb-2">Awards</h3>
-            <CountUp end={25} duration={8} className="text-2xl md:text-3xl font-semibold" />
-            <p className="text-red-400 text-sm mt-1">Awards</p>
-          </div>
-          <div className="counter-item md:p-5 p-2 rounded-lg shadow-lg text-center text-red-500 bg-white bg-opacity-40">
-            <h3 className="text-2xl md:text-3xl font-bold mb-2">Happy Recipients</h3>
-            <CountUp end={3000} duration={8} className="text-2xl md:text-3xl font-semibold" />
-            <p className="text-red-400 text-sm mt-1">Recipients</p>
-          </div>
-        </div>
+      {/* dark overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/70 to-black/30"></div>
+
+      <div className="relative z-10 container mx-auto px-4 py-20">
+        <h2 className="text-3xl md:text-4xl text-white font-bold text-center mb-12">
+          Our Impact in Numbers
+        </h2>
+
+        <Row gutter={[24, 24]}>
+          {stats.map(({ label, value, icon }) => (
+            <Col key={label} xs={24} sm={12} md={6}>
+              <Card
+                hoverable
+                className="bg-white bg-opacity-90 rounded-xl shadow-lg text-center transition-transform duration-300 hover:-translate-y-2"
+              >
+                <div className="text-red-500 text-5xl mb-4">{icon}</div>
+                <div className="text-4xl font-extrabold text-gray-800">
+                  {inView ? (
+                    <CountUp end={value} duration={2.5} separator="," />
+                  ) : (
+                    '0'
+                  )}
+                </div>
+                <div className="mt-2 text-gray-600 uppercase font-medium">
+                  {label}
+                </div>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </div>
     </div>
   );

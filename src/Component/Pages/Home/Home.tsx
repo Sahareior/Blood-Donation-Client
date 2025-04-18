@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -10,39 +10,22 @@ import About from './Components/About/About';
 import Counter from './Components/Counter/Counter';
 import Campaigns from './Components/Campaigns/Campaigns';
 import Volunteers from './Components/Volunteers/Volunteers';
+import { MyContext } from '../../../Provider/MyProvider';
+import Main from './Components/Main/Main';
 
 export default function Home() {
+
+
   return (
     <>
-    <Swiper
-      direction={'vertical'}
-      
-      pagination={{ clickable: true }}
-      mousewheel={true}
-      modules={[Pagination, Mousewheel]}
-      className="mySwiper"
-      style={{ height: '100vh' }}
-      
-    >
-        <SwiperSlide>
-          <Slider />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Hero />
-        </SwiperSlide>
-        <SwiperSlide>
-          <About />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Counter />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Campaigns />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Volunteers />
-        </SwiperSlide>
-      </Swiper>
+     {/* <Slider /> */}
+     <Main />
+     <Hero />
+     <About />
+  
+     <Campaigns />
+     <Volunteers />
+
     </>
   );
 }

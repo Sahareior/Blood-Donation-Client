@@ -23,7 +23,7 @@ const Registration = () => {
                 uid: user.uid
             };
 
-            await axios.post('https://blood-donar-server-production.up.railway.app/user', userData, {
+            await axios.post('https://blood-donar-server-zf9x.onrender.com/user', userData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
